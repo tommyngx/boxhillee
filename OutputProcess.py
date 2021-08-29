@@ -515,7 +515,7 @@ def show_knee_calibrate2(link, size_reduce, percentreduce,percentreuduce2):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader(knee2class.weights')  ## Đọc w
+  wr = WeightReader('knee2class.weights')  ## Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
