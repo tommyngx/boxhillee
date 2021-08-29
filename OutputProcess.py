@@ -240,7 +240,7 @@ def draw_boxes3(filename, v_boxes, v_labels, v_scores, v_colors):
     img = cv2.imread(filename)
     #print(v_boxes[1])
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         #print(i2)
         box = v_boxes[i]
@@ -281,7 +281,7 @@ def crop_boxes4(filename, v_boxes, v_labels, v_scores, v_colors):
     labelshow=[]
     k=0
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         box = v_boxes[i]
         y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
@@ -314,13 +314,13 @@ def crop_boxes4(filename, v_boxes, v_labels, v_scores, v_colors):
         plt.axis('off')
     plt.show()
 
-def crop_vert_calibrate(filename, v_boxes, v_labels, v_scores, percentreduce):
+def crop_knee_calibrate(filename, v_boxes, v_labels, v_scores, percentreduce):
     v_colors=['#F657C6','#9BEC1C','#DE1F55','#FADD3A','#A2E24D','#CA0F3B','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD']
     img = cv2.imread(filename)
     labelshow=[]
     k=0
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         box = v_boxes[i]
         y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
@@ -357,8 +357,8 @@ def crop_vert_calibrate(filename, v_boxes, v_labels, v_scores, percentreduce):
 
 
 
-def show_vertebral(link, size_reduce):
-  labels =['Vertebra','Abnormal','Spine','Sacrum']
+def show_knee(link, size_reduce):
+  labels =['LeftKnee','RightKnee']
 
   # Bước 1: Đọc ảnh, xử lý
   #from PIL import Image
@@ -375,7 +375,7 @@ def show_vertebral(link, size_reduce):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader('Vert5class.weights')  # Đọc w
+  wr = WeightReader('knee2class.weights')  # Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
@@ -392,8 +392,8 @@ def show_vertebral(link, size_reduce):
   draw_boxes3('temp.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
   crop_boxes4('temp.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
 
-def show_vertebralX(link, size_reduce):
-  labels =['Vertebra','Abnormal','Spine','Sacrum']
+def show_kneeX(link, size_reduce):
+  labels =['LeftKnee','RightKnee']
 
   # Bước 1: Đọc ảnh, xử lý
   #from PIL import Image
@@ -410,7 +410,7 @@ def show_vertebralX(link, size_reduce):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader('Vert5class.weights')  # Đọc w
+  wr = WeightReader('knee2class.weights')  # Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
@@ -427,8 +427,8 @@ def show_vertebralX(link, size_reduce):
   draw_boxes33('temp.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
   crop_boxes4('temp.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
 
-def show_vertebral_ori(link, size_reduce):
-  labels =['Vertebra','Abnormal','Spine','Sacrum']
+def show_knee_ori(link, size_reduce):
+  labels =['LeftKnee','RightKnee']
 
   # Bước 1: Đọc ảnh, xử lý
   #from PIL import Image
@@ -445,7 +445,7 @@ def show_vertebral_ori(link, size_reduce):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader('Vert5class.weights')  # Đọc w
+  wr = WeightReader('knee2class.weights')  # Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
@@ -462,8 +462,8 @@ def show_vertebral_ori(link, size_reduce):
   draw_boxes33('somepic.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
   crop_boxes4('somepic.jpg', v_boxes_rs, v_labels, v_scores, v_colors)
 
-def show_vertebral_calibrate(link, size_reduce, percentreduce):
-  labels =['Vertebra','Abnormal','Spine','Sacrum']
+def show_knee_calibrate(link, size_reduce, percentreduce):
+  labels =['LeftKnee','RightKnee']
 
   # Bước 1: Đọc ảnh, xử lý
   #from PIL import Image
@@ -480,7 +480,7 @@ def show_vertebral_calibrate(link, size_reduce, percentreduce):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader('Vert5class.weights')  # Đọc w
+  wr = WeightReader('knee2class.weights')  # Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
@@ -495,10 +495,10 @@ def show_vertebral_calibrate(link, size_reduce, percentreduce):
   # Bước 4: Vis kết quả
   #draw_boxes3(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
   draw_boxes_calibrate('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce)
-  crop_vert_calibrate('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce)
+  crop_knee_calibrate('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce)
 
-def show_vertebral_calibrate2(link, size_reduce, percentreduce,percentreuduce2):
-  labels =['Vertebra','Abnormal','Spine','Sacrum']
+def show_knee_calibrate2(link, size_reduce, percentreduce,percentreuduce2):
+  labels =['LeftKnee','RightKnee']
 
   # Bước 1: Đọc ảnh, xử lý
   #from PIL import Image
@@ -515,7 +515,7 @@ def show_vertebral_calibrate2(link, size_reduce, percentreduce,percentreuduce2):
 
   # Bước 2: Cho qua YOLO DNN
   model = YOLOV41() # Tạo
-  wr = WeightReader('Vert5class.weights')  # Đọc w
+  wr = WeightReader(knee2class.weights')  ## Đọc w
   wr.load_weights(model) # Load vào model
   yhat = model.predict(image)
 
@@ -530,14 +530,14 @@ def show_vertebral_calibrate2(link, size_reduce, percentreduce,percentreuduce2):
   # Bước 4: Vis kết quả
   #draw_boxes3(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
   draw_boxes_calibrate2('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce, percentreuduce2)
-  crop_vert_calibrate2('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce, percentreuduce2)
+  crop_knee_calibrate2('temp.jpg', v_boxes_rs, v_labels, v_scores, percentreduce, percentreuduce2)
 
 def draw_boxes_calibrate(filename, v_boxes, v_labels, v_scores, percentreduce):
     v_colors=['#F657C6','#9BEC1C','#00B2FF','#FADD3A','#A2E24D','#CA0F3B','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD']
     img = cv2.imread(filename)
     #print(v_boxes[1])
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         #print(i2)
         box = v_boxes[i]
@@ -582,7 +582,7 @@ def draw_boxes33(filename, v_boxes, v_labels, v_scores, v_colors):
     img = cv2.imread(filename)
     #print(v_boxes[1])
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         #print(i2)
         box = v_boxes[i]
@@ -620,7 +620,7 @@ def draw_boxes_calibrate2(filename, v_boxes, v_labels, v_scores, percentreduce, 
     img = cv2.imread(filename)
     #print(v_boxes[1])
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         #print(i2)
         box = v_boxes[i]
@@ -660,13 +660,13 @@ def draw_boxes_calibrate2(filename, v_boxes, v_labels, v_scores, percentreduce, 
     plt.axis('off')
     plt.show()
 
-def crop_vert_calibrate2(filename, v_boxes, v_labels, v_scores, percentreduce, percentreuduce2):
+def crop_knee_calibrate2(filename, v_boxes, v_labels, v_scores, percentreduce, percentreuduce2):
     v_colors=['#F657C6','#9BEC1C','#DE1F55','#FADD3A','#A2E24D','#CA0F3B','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD']
     img = cv2.imread(filename)
     labelshow=[]
     k=0
     for i in range(len(v_boxes)):
-        labels =['Vertebra','Abnormal','Spine','Sacrum']
+        labels =['LeftKnee','RightKnee']
         i2 = labels.index(v_labels[i])
         box = v_boxes[i]
         y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax

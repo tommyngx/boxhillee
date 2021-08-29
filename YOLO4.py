@@ -339,7 +339,7 @@ def YOLOV41():
     layer_137 = x 
     
     ## Layer 138 [convolutional]
-    x = _conv_block(x, [{'filter':  27, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':  0, 'layer_idx': 138}])   
+    x = _conv_block(x, [{'filter':  21, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':  0, 'layer_idx': 138}])   
     
     # -- end last Convulationnal 3*3 and 1*1 for 76*76
     
@@ -374,7 +374,7 @@ def YOLOV41():
     # -- beging last Convulationnal 3*3 and 1*1 for 38*38
     ## Layer 148 => 149 [convolutional]                   
     x = _conv_block(x, [{'filter':  512, 'kernel': 3, 'stride': 1, 'bnorm': True, 'activ':  1, 'layer_idx': 148},
-                        {'filter':  27, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':  0, 'layer_idx': 149}])
+                        {'filter':  21, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':  0, 'layer_idx': 149}])
     
     # -- end last Convulationnal 3*3 and 1*1 for 38*38
     
@@ -406,7 +406,7 @@ def YOLOV41():
                         
     # -- beging last Convulationnal 3*3 and 1*1 for 19*19                   
                         {'filter':  1024, 'kernel': 3, 'stride': 1, 'bnorm': True, 'activ':    1, 'layer_idx': 159},
-                        {'filter':   27, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':    0, 'layer_idx': 160}])  
+                        {'filter':   21, 'kernel': 1, 'stride': 1, 'bnorm': True, 'activ':    0, 'layer_idx': 160}])  
     # -- end last Convulationnal 3*3 and 1*1 for 19*19                     
     
     # -- output 19*19                    
