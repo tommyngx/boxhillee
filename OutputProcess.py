@@ -357,18 +357,15 @@ def crop_boxes6(filename, v_boxes, v_labels, v_scores, v_colors):
           cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave), crop2)
 
     fig = plt.figure(figsize=(25, 22))
-    columns = 4
-    rows = 4
-    for i in range(1, len(labelshow)+1):
-        img = cv2.imread("crop_{}.jpg".format(i-1))
-        i2=i-1
-        plt.rc('font', size=15) 
-        if labelshow[i2][0]=="L":
-          fig.add_subplot(rows,columns, 2).set_title('{}'.format(labelshow[i2]), color='r')
-        elif labelshow[i2][0]=="R":
-          fig.add_subplot(rows, columns, 1).set_title('{}'.format(labelshow[i2]), color='g')
-        plt.imshow(img)
-        plt.axis('off')
+    img= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave))
+    plt.rc('font', size=15)
+    fig.add_subplot(1, 4, 2).set_title('{}'.format(labelshow[1]), color='r')
+    plt.imshow(img)
+    plt.axis('off')
+    img2= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}R.jpg".format(filesave))
+    fig.add_subplot(1, 4, 1).set_title('{}'.format(labelshow[0]), color='g')
+    plt.imshow(img2)
+    plt.axis('off')
     plt.show()
 
 
