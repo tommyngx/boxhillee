@@ -357,15 +357,35 @@ def crop_boxes6(filename, v_boxes, v_labels, v_scores, v_colors):
           cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave), crop2)
 
     fig = plt.figure(figsize=(25, 22))
-    img= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave))
-    plt.rc('font', size=15)
-    fig.add_subplot(1, 4, 2).set_title('{}'.format(labelshow[1]), color='r')
-    plt.imshow(img)
-    plt.axis('off')
-    img2= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}R.jpg".format(filesave))
-    fig.add_subplot(1, 4, 1).set_title('{}'.format(labelshow[0]), color='g')
-    plt.imshow(img2)
-    plt.axis('off')
+    try:
+      img= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave))
+      plt.rc('font', size=15)
+      try:
+        fig.add_subplot(1, 4, 2).set_title('{}'.format(labelshow[0]), color='r')
+      except:
+        fig.add_subplot(1, 4, 2).set_title('{}'.format(labelshow[1]), color='r')
+        pass
+      plt.imshow(img)
+      plt.axis('off')
+    except:
+      img = np.random.rand(720,720,3) * 255
+      img = Image.fromarray(img.astype('uint8')).convert('RGBA')
+      fig.add_subplot(1, 4, 2).set_title('Fail Detection', color='r')
+      plt.imshow(img)
+      plt.axis('off')
+      pass
+    try:
+      img2= cv2.imread("/content/tommy/data/VOS-phase2KNEE-Crop/{}R.jpg".format(filesave))
+      fig.add_subplot(1, 4, 1).set_title('{}'.format(labelshow[1]), color='g')
+      plt.imshow(img2)
+      plt.axis('off')
+    except:
+      img2 = np.random.rand(720,720,3) * 255
+      img2 = Image.fromarray(img2.astype('uint8')).convert('RGBA')
+      fig.add_subplot(1, 4, 1).set_title('Fail Detection', color='g')
+      plt.imshow(img2)
+      plt.axis('off')
+      pass
     plt.show()
 
 
