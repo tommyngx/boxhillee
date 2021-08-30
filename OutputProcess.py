@@ -235,6 +235,297 @@ def draw_boxes2(filename, v_boxes, v_labels, v_scores, v_colors):
     plt.axis('off')
     plt.show()
 
+############################### KOA
+
+def detect_knee2(link):
+  labels =['LeftKnee','RightKnee']
+
+  # Bước 1: Đọc ảnh, xử lý
+  img= Image.open(link)
+  photo_filename = link #'somepic.jpg'
+  image, image_w, image_h = load_image_pixels(photo_filename, (input_w, input_h))
+
+  # Bước 2: Cho qua YOLO DNN
+  model = YOLOV41() # Tạo
+  wr = WeightReader('knee2class.weights')  # Đọc w
+  wr.load_weights(model) # Load vào model
+  yhat = model.predict(image)
+
+  # Bước 3: Xử lý đầu ra của DNN YOLO --> Kết quả
+  boxes = yolo_boxes(yhat)   
+  boxes = correct_yolo_boxes(boxes, image_h, image_w, input_h, input_w)  
+  rs_boxes = do_nms(boxes, 0.5) 
+  class_threshold = 0.7
+  colors = generate_colors(labels)
+  v_boxes_rs, v_labels, v_scores, v_colors = get_boxes(boxes, labels, class_threshold, colors) 
+
+  # Bước 4: Vis kết quả
+  #draw_boxes3(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+  draw_boxes35(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+  crop_boxes6(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+def draw_boxes35(filename, v_boxes, v_labels, v_scores, v_colors):
+    v_colors=['#F657C6','#9BEC1C','#00B2FF','#FADD3A']
+    img = cv2.imread(filename); h1,w1,_= img.shape
+    filesave = filename.split("/")[-1].split(".")[0]
+    for i in range(len(v_boxes)):
+        labels =['LeftKnee','RightKnee']
+        i2 = labels.index(v_labels[i])
+        #print(i2)
+        box = v_boxes[i]
+        y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
+        if (x1+360) < (w1/2):
+          v_labels[i] = 'RightKnee'; i2=1
+        if (x1+360) > (w1/2):
+          v_labels[i] = 'LeftKnee'; i2=0
+        y2 = int(0.93*y2) ; y1 =int(0.93*y1)
+        if (v_labels[i] == 'LeftKnee'):
+          x2 = int(0.97*x2); x1=int(0.97*x1)
+        if (v_labels[i] == 'RightKnee'):
+          x2 = int(1.04*x2); x1=int(1.04*x1)
+        width, height = x2 - x1, y2 - y1
+        if (y2-y1)<720:
+          y1 = int(y1-(360-(y2-y1)/2))
+        if (x2-x1)<720:
+          x1 = int(x1-(360-(x2-x1)/2))
+        x2 = x1+720; y2 =y1+720
+        label = "%s:%.0f" % (v_labels[i], v_scores[i]) + "%"
+        # For bounding box
+        # For the text background
+        color2 = v_colors[i2]
+        color2 = ImageColor.getcolor(color2, "RGB")
+        color2=tuple(reversed(color2))
+        img = cv2.rectangle(img, (x1, y1), (x2, y2), color2, 3) #
+        # Finds space required by the text so that we can put a background with that amount of width.
+        
+        (w, h), _ = cv2.getTextSize(
+                label, cv2.FONT_HERSHEY_SIMPLEX, 1.8, 2)
+
+        # Prints the text. 
+        img = cv2.rectangle(img, (x1, y1-50), (x1 + w, y1), color2, -1)
+        text_color="#000000"#v_colors[i2]
+        text_color2 = ImageColor.getcolor(text_color, "RGB")
+        #text_color2 = complement(*text_color2)
+        img = cv2.putText(img, label, (x1, y1 - 4),
+                            cv2.FONT_HERSHEY_DUPLEX,1.77, text_color2, 2,cv2.LINE_AA)
+
+    cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Detect/{}S.jpg".format(filesave),img)
+    #cv2_imshow(img)
+    fig = plt.figure(figsize=(10, 10))
+    plt.imshow(cv2.cvtColor(cv2.imread("/content/tommy/data/VOS-phase2KNEE-Detect/{}S.jpg".format(filesave)), cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.show()
+
+def crop_boxes6(filename, v_boxes, v_labels, v_scores, v_colors):
+    v_colors=['#F657C6','#9BEC1C','#DE1F55','#FADD3A']
+    img = cv2.imread(filename); h1,w1,_= img.shape
+    filesave = filename.split("/")[-1].split(".")[0]
+    labelshow=[]
+    for i in range(len(v_boxes)):
+        labels =['LeftKnee','RightKnee']
+        i2 = labels.index(v_labels[i])
+        box = v_boxes[i]
+        y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
+        #print(x1,x2)
+        if (x1+360) < (w1/2):
+          v_labels[i] = 'RightKnee'; i2=1
+        if (x1+360) > (w1/2):
+          v_labels[i] = 'LeftKnee'; i2=0
+        y2 = int(0.93*y2) ; y1 =int(0.93*y1)
+        if (v_labels[i] == 'LeftKnee'):
+          x2 = int(0.97*x2); x1=int(0.97*x1)
+        if (v_labels[i] == 'RightKnee'):
+          x2 = int(1.04*x2); x1=int(1.04*x1)
+        width, height = x2 - x1, y2 - y1
+        if (y2-y1)<720:
+          y1 = int(y1-(360-(y2-y1)/2))
+        if (x2-x1)<720:
+          x1 = int(x1-(360-(x2-x1)/2))
+        if x1<0: x1=0
+        if y1<0: y1=0
+        if (y1+720)>h1: y1=h1-720
+        if (x1+720)>w1: x1=w1-720
+        x2 = x1+720; y2 =y1+720
+        label = "%s:%.0f" % (v_labels[i], v_scores[i]) + "%"
+        if i2==1:
+          labelshow.append("%s:%.0f" % (v_labels[i], v_scores[i]) + "%")
+          crop = img[y1:y2, x1:x2]
+          cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}R.jpg".format(filesave), crop)
+        if i2==0:
+          #print("Đốt Xương {}".format(i))
+          labelshow.append("%s:%.0f" % (v_labels[i], v_scores[i]) + "%")
+          crop2 = img[y1:y2, x1:x2]
+          cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave), crop2)
+
+    fig = plt.figure(figsize=(25, 22))
+    columns = 4
+    rows = 4
+    for i in range(1, len(labelshow)+1):
+        img = cv2.imread("crop_{}.jpg".format(i-1))
+        i2=i-1
+        plt.rc('font', size=15) 
+        if labelshow[i2][0]=="L":
+          fig.add_subplot(rows,columns, 2).set_title('{}'.format(labelshow[i2]), color='r')
+        elif labelshow[i2][0]=="R":
+          fig.add_subplot(rows, columns, 1).set_title('{}'.format(labelshow[i2]), color='g')
+        plt.imshow(img)
+        plt.axis('off')
+    plt.show()
+
+
+
+
+def detect_knee3(link):
+  labels =['LeftKnee','RightKnee']
+
+  # Bước 1: Đọc ảnh, xử lý
+  img= Image.open(link)
+  photo_filename = link #'somepic.jpg'
+  image, image_w, image_h = load_image_pixels(photo_filename, (input_w, input_h))
+
+  # Bước 2: Cho qua YOLO DNN
+  model = YOLOV41() # Tạo
+  wr = WeightReader('knee2class.weights')  # Đọc w
+  wr.load_weights(model) # Load vào model
+  yhat = model.predict(image)
+
+  # Bước 3: Xử lý đầu ra của DNN YOLO --> Kết quả
+  boxes = yolo_boxes(yhat)   
+  boxes = correct_yolo_boxes(boxes, image_h, image_w, input_h, input_w)  
+  rs_boxes = do_nms(boxes, 0.5) 
+  class_threshold = 0.7
+  colors = generate_colors(labels)
+  v_boxes_rs, v_labels, v_scores, v_colors = get_boxes(boxes, labels, class_threshold, colors) 
+
+  # Bước 4: Vis kết quả
+  #draw_boxes3(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+  draw_boxes36(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+  crop_boxes7(photo_filename, v_boxes_rs, v_labels, v_scores, v_colors)
+def draw_boxes36(filename, v_boxes, v_labels, v_scores, v_colors):
+    v_colors=['#F657C6','#9BEC1C','#00B2FF','#FADD3A']
+    img = cv2.imread(filename); h1,w1,_= img.shape
+    filesave = filename.split("/")[-1].split(".")[0]
+    for i in range(len(v_boxes)):
+        labels =['LeftKnee','RightKnee']
+        i2 = labels.index(v_labels[i])
+        #print(i2)
+        box = v_boxes[i]
+        y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
+        if (x1+360) < (w1/2):
+          v_labels[i] = 'RightKnee'; i2=1
+        if (x1+360) > (w1/2):
+          v_labels[i] = 'LeftKnee'; i2=0
+        y2 = int(0.93*y2) ; y1 =int(0.93*y1)
+        if (v_labels[i] == 'LeftKnee'):
+          x2 = int(0.97*x2); x1=int(0.97*x1)
+        if (v_labels[i] == 'RightKnee'):
+          x2 = int(1.04*x2); x1=int(1.04*x1)
+        width, height = x2 - x1, y2 - y1
+        if (y2-y1)<720:
+          y1 = int(y1-(360-(y2-y1)/2))
+        if (x2-x1)<720:
+          x1 = int(x1-(360-(x2-x1)/2))
+        x2 = x1+720; y2 =y1+720
+        label = "%s:%.0f" % (v_labels[i], v_scores[i]) + "%"
+        # For bounding box
+        # For the text background
+        color2 = v_colors[i2]
+        color2 = ImageColor.getcolor(color2, "RGB")
+        color2=tuple(reversed(color2))
+        img = cv2.rectangle(img, (x1, y1), (x2, y2), color2, 3) #
+        # Finds space required by the text so that we can put a background with that amount of width.
+        
+        (w, h), _ = cv2.getTextSize(
+                label, cv2.FONT_HERSHEY_SIMPLEX, 1.8, 2)
+
+        # Prints the text. 
+        img = cv2.rectangle(img, (x1, y1-50), (x1 + w, y1), color2, -1)
+        text_color="#000000"#v_colors[i2]
+        text_color2 = ImageColor.getcolor(text_color, "RGB")
+        #text_color2 = complement(*text_color2)
+        img = cv2.putText(img, label, (x1, y1 - 4),
+                            cv2.FONT_HERSHEY_DUPLEX,1.77, text_color2, 2,cv2.LINE_AA)
+
+    cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Detect/{}.jpg".format(filesave),img)
+    #cv2_imshow(img)
+
+def crop_boxes7(filename, v_boxes, v_labels, v_scores, v_colors):
+    v_colors=['#F657C6','#9BEC1C','#DE1F55','#FADD3A']
+    img = cv2.imread(filename); h1,w1,_= img.shape
+    filesave = filename.split("/")[-1].split(".")[0]
+    labelshow=[]
+    for i in range(len(v_boxes)):
+        labels =['LeftKnee','RightKnee']
+        i2 = labels.index(v_labels[i])
+        box = v_boxes[i]
+        y1, x1, y2, x2 = box.ymin, box.xmin, box.ymax, box.xmax
+        #print(x1,x2)
+        if (x1+360) < (w1/2):
+          v_labels[i] = 'RightKnee'; i2=1
+        if (x1+360) > (w1/2):
+          v_labels[i] = 'LeftKnee'; i2=0
+        y2 = int(0.93*y2) ; y1 =int(0.93*y1)
+        if (v_labels[i] == 'LeftKnee'):
+          x2 = int(0.97*x2); x1=int(0.97*x1)
+        if (v_labels[i] == 'RightKnee'):
+          x2 = int(1.04*x2); x1=int(1.04*x1)
+        width, height = x2 - x1, y2 - y1
+        if (y2-y1)<720:
+          y1 = int(y1-(360-(y2-y1)/2))
+        if (x2-x1)<720:
+          x1 = int(x1-(360-(x2-x1)/2))
+        if x1<0: x1=0
+        if y1<0: y1=0
+        if (y1+720)>h1: y1=h1-720
+        if (x1+720)>w1: x1=w1-720
+        x2 = x1+720; y2 =y1+720
+        label = "%s:%.0f" % (v_labels[i], v_scores[i]) + "%"
+        if i2==1:
+          labelshow.append("%s:%.0f" % (v_labels[i], v_scores[i]) + "%")
+          crop = img[y1:y2, x1:x2]
+          cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}R.jpg".format(filesave), crop)
+        if i2==0:
+          #print("Đốt Xương {}".format(i))
+          labelshow.append("%s:%.0f" % (v_labels[i], v_scores[i]) + "%")
+          crop2 = img[y1:y2, x1:x2]
+          cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Crop/{}L.jpg".format(filesave), crop2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def draw_boxes3(filename, v_boxes, v_labels, v_scores, v_colors):
     v_colors=['#F657C6','#9BEC1C','#DE1F55','#FADD3A','#A2E24D','#CA0F3B','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD','#DE1F55',"#F0326A","#CAFD65", '#3CC983','#4600CD']
     img = cv2.imread(filename)
