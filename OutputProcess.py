@@ -311,7 +311,7 @@ def draw_boxes35(filename, v_boxes, v_labels, v_scores, v_colors):
     cv2.imwrite("/content/tommy/data/VOS-phase2KNEE-Detect/{}.jpg".format(filesave),img)
     #cv2_imshow(img)
     fig = plt.figure(figsize=(10, 10))
-    plt.imshow(cv2.cvtColor(cv2.imread("/content/tommy/data/VOS-phase2KNEE-Detect/{}S.jpg".format(filesave)), cv2.COLOR_BGR2RGB))
+    plt.imshow(cv2.cvtColor(cv2.imread("/content/tommy/data/VOS-phase2KNEE-Detect/{}.jpg".format(filesave)), cv2.COLOR_BGR2RGB))
     plt.axis('off')
     plt.show()
 
