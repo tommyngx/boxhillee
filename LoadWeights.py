@@ -9,10 +9,10 @@ class WeightReader:
             revision, = struct.unpack('i', w_f.read(4))
 
             if (major*10 + minor) >= 2 and major < 1000 and minor < 1000:
-                print("reading 64 bytes")
+                #print("reading 64 bytes")
                 w_f.read(8)
             else:
-                print("reading 32 bytes")
+                #print("reading 32 bytes")
                 w_f.read(4)
 
             transpose = (major > 1000) or (minor > 1000)
