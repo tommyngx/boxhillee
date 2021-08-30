@@ -255,7 +255,7 @@ def detect_knee2(link):
   boxes = yolo_boxes(yhat)   
   boxes = correct_yolo_boxes(boxes, image_h, image_w, input_h, input_w)  
   rs_boxes = do_nms(boxes, 0.5) 
-  class_threshold = 0.7
+  class_threshold = 0.55
   colors = generate_colors(labels)
   v_boxes_rs, v_labels, v_scores, v_colors = get_boxes(boxes, labels, class_threshold, colors) 
 
@@ -409,7 +409,7 @@ def detect_knee3(link):
   boxes = yolo_boxes(yhat)   
   boxes = correct_yolo_boxes(boxes, image_h, image_w, input_h, input_w)  
   rs_boxes = do_nms(boxes, 0.5) 
-  class_threshold = 0.7
+  class_threshold = 0.55
   colors = generate_colors(labels)
   v_boxes_rs, v_labels, v_scores, v_colors = get_boxes(boxes, labels, class_threshold, colors) 
 
